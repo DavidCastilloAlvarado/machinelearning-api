@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+import io
 from pathlib import Path
 
 import environ
@@ -11,9 +12,16 @@ APPS_DIR = ROOT_DIR / "ml_api"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
+DJANGO_SECRET_FILE = env("DJANGO_SECRET_FILE", default=None)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
     env.read_env(str(ROOT_DIR / "secrets" / ".env"))
+elif DJANGO_SECRET_FILE:
+    from ml_api.utils.secretmanager import get_payload_secret
+
+    env = environ.Env()
+    payload = get_payload_secret(DJANGO_SECRET_FILE)
+    env.read_env(io.StringIO(payload))
 
 # GENERAL
 # ------------------------------------------------------------------------------
