@@ -26,18 +26,24 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
-
 ]
 
 # Documentation
 urlpatterns += [
-    path('docs/', TemplateView.as_view(template_name="docs/swagger.html"), name='swagger'),
-    path('schema/html/', TemplateView.as_view(template_name="docs/schema.yaml"), name='schema_html'),
+    path(
+        "docs/", TemplateView.as_view(template_name="docs/swagger.html"), name="swagger"
+    ),
+    path(
+        "schema/html/",
+        TemplateView.as_view(template_name="docs/schema.yaml"),
+        name="schema_html",
+    ),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
         "api/docs/",
-        SpectacularSwaggerView.as_view(url_name="api-schema",),
-
+        SpectacularSwaggerView.as_view(
+            url_name="api-schema",
+        ),
         name="api-docs",
     ),
 ]

@@ -13,9 +13,7 @@ PRODUCTION_DOTENV_FILE_PATHS = [
 DOTENV_FILE_PATH = ROOT_DIR_PATH / ".env"
 
 
-def merge(
-    output_file_path, merged_file_paths, append_linesep: bool = True
-) -> None:
+def merge(output_file_path, merged_file_paths, append_linesep: bool = True) -> None:
     with open(output_file_path, "w") as output_file:
         for merged_file_path in merged_file_paths:
             with open(merged_file_path) as merged_file:
