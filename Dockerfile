@@ -29,7 +29,7 @@ RUN pip wheel --wheel-dir /usr/src/app/wheels  \
 # ------------------------------------------------------------------------------#
 # Python 'run' stage
 FROM python as python-run-stage
-# ARG variable 
+# ARG variable
 ARG ES_CERTIFICATE
 ENV ES_CERTIFICATE=$ES_CERTIFICATE
 # set environment variables
@@ -63,7 +63,7 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
 # RUN sed -i 's/\r$//g' /entrypoint
 # RUN chmod +x /entrypoint
 # copy project
-# RUN echo -e ${ES_CERTIFICATE} > es_certificate.crt 
+# RUN echo -e ${ES_CERTIFICATE} > es_certificate.crt
 #RUN echo -e ${ES_CERTIFICATE} > ./es_certificate.crt
 #COPY es_certificate.crt /usr/src/app/es_certificate.crt
 COPY . /usr/src/app/
