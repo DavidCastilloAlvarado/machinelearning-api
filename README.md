@@ -48,6 +48,12 @@ sudo docker-compose -f local.yml run --rm django python manage.py makemigrations
 sudo docker-compose -f local.yml run --rm django python manage.py migrate
 ```
 
+#### Before commit please use pre-commit to check your code. [Link_docs](https://pre-commit.com/#install)
+
+```
+pre-commit run --all-files
+```
+
 ## Recomendation
 
 -------------
