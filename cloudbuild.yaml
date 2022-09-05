@@ -77,4 +77,4 @@ steps:
         "--vpc-connector",
         "mlapiconnectorvpc",
       ]
-timeout: 600s
+timeout: 1200s
