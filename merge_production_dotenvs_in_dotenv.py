@@ -1,5 +1,5 @@
 import os
-from collections.abc import Sequence
+# from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
