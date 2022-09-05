@@ -1,4 +1,6 @@
+import google.auth
 from google.cloud import secretmanager
+
 _, PROJECT_ID = google.auth.default()
 
 
