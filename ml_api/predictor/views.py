@@ -31,7 +31,17 @@ class ModelsResultsPagination(PageNumberPagination):
         })
 
 
-@extend_schema_view(list=extend_schema(parameters=[RegisterModelSerializerRequest],))
+@extend_schema_view(list=extend_schema(parameters=[RegisterModelSerializerRequest],
+                                       description="""List all your model in the database"""),
+                    create=extend_schema(
+                        description="""Create a new models, ensure that your url will be under server IAM control """),
+                    retrieve=extend_schema(
+                        description="""Call an specific model using the unique <b>id</b> in the database"""),
+                    update=extend_schema(
+                        description="""Update the values of a model already saved"""),
+                    destroy=extend_schema(
+                        description="""Destroy a machine learning model from the database using his <b>id</b>"""),
+                    )
 @extend_schema(tags=['Register a model'],)
 class RegisterModelApiView(ViewSet,
                            generics.CreateAPIView,
