@@ -4,9 +4,12 @@ from rest_framework import serializers, status, generics
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
-from rest_framework.schemas.openapi import AutoSchema
-from ml_api.predictor.models import ModelSink
-from ml_api.predictor.serializer import RegisterModelSerializer
+from predictor.models import ModelSink
+from predictor.serializer import RegisterModelSerializer, RegisterModelSerializerRequest
+from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from rest_framework.decorators import action
 
 
 class ModelsResultsPagination(PageNumberPagination):
@@ -28,15 +31,24 @@ class ModelsResultsPagination(PageNumberPagination):
         })
 
 
+@extend_schema_view(list=extend_schema(parameters=[RegisterModelSerializerRequest],))
+@extend_schema(tags=['Register a model'],)
 class RegisterModelApiView(ViewSet,
                            generics.CreateAPIView,
                            generics.RetrieveAPIView,
                            generics.UpdateAPIView,
-                           generics.DestroyAPIView
+                           generics.DestroyAPIView,
+                           generics.ListAPIView,
                            ):
-    schema = AutoSchema(tags=["models", "upload"])
     pagination_class = ModelsResultsPagination
     modelset = ModelSink
     permission_classes = [AllowAny]
     queryset = modelset.objects.all()
     serializer_class = RegisterModelSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_backends += [filters.OrderingFilter]
+    filter_backends += [filters.SearchFilter]
+    filterset_fields = ['version', 'algorithm']
+    search_fields = ['name', 'algorithm']
+    ordering_fields = ['version', '-version']
+    ordering = ['-version']
