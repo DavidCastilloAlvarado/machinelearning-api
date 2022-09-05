@@ -15,14 +15,14 @@ steps:
         "gcr.io/${PROJECT_ID}/${_GCRUN_INSTANCE}",
         "-s",
         "${PROJECT_ID}:${_DB_ZONE}:${_DB_INSTANCE}",
+        "-e",
+        "DJANGO_SECRET_FILE=${_ENV_SECRETS}",
         "--",
         "python",
         "manage.py",
         "migrate",
         "--settings=config.settings.production",
       ]
-    env:
-      - "DJANGO_SECRET_FILE=${_ENV_SECRETS}"
 
   # push static files to Cloud Bucket
   - name: "gcr.io/google-appengine/exec-wrapper"
@@ -32,6 +32,8 @@ steps:
         "gcr.io/${PROJECT_ID}/${_GCRUN_INSTANCE}",
         "-s",
         "${PROJECT_ID}:${_DB_ZONE}:${_DB_INSTANCE}",
+        "-e",
+        "DJANGO_SECRET_FILE=${_ENV_SECRETS}",
         "--",
         "python",
         "manage.py",
@@ -39,8 +41,6 @@ steps:
         "--no-input",
         "--settings=config.settings.production",
       ]
-    env:
-      - "DJANGO_SECRET_FILE=${_ENV_SECRETS}"
 
   # deploy to Cloud Run
   # https://cloud.google.com/run/pricing
