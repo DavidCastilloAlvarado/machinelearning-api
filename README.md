@@ -101,3 +101,11 @@ See detailed [cookiecutter-django Docker documentation](http://cookiecutter-djan
 
 1. Create a bucket on GCP
 1. Create a cloudbuild trigger on GCP
+
+### Create super user with production database
+
+1. Please refer to [this page](https://cloud.google.com/python/django/flexible-environment) to see the details.
+
+        1.1. create a secure connection
+        1.2. update your .env with the new connection (optional)
+        1.3. create a superuser with the docker-compose command above
