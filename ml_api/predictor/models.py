@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 
@@ -13,6 +13,9 @@ class ModelSink(models.Model):
     version = models.CharField(max_length=500, )
     url = models.URLField(max_length=1000, )
     url_encoder = models.URLField(max_length=1000, default=None, blank=True, null=True)
+    sample_input = models.JSONField(blank=True, null=True, default=None)
+    sample_output = models.JSONField(blank=True, null=True, default=None)
+    metrics = ArrayField(models.JSONField(), blank=True, null=True, default=None)
 
     class Meta:
         db_table = 'model_sink'

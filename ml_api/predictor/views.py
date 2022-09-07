@@ -10,6 +10,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view, inline_seri
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.decorators import action
+from django.db.utils import IntegrityError
 
 
 class ModelsResultsPagination(PageNumberPagination):
@@ -62,3 +63,9 @@ class RegisterModelApiView(ViewSet,
     search_fields = ['name', 'algorithm']
     ordering_fields = ['version', '-version']
     ordering = ['-version']
+
+    def perform_create(self, serializer):
+        try:
+            serializer.save()
+        except IntegrityError as e:
+            raise serializers.ValidationError(e)
