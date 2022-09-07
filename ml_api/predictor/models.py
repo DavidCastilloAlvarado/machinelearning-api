@@ -30,3 +30,20 @@ class ModelSink(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PredictionsHistory(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, blank=False, null=False)
+    updated_at = models.DateTimeField(auto_now=True, blank=False, null=False)
+    input_data = ArrayField(models.JSONField())
+    full_response = models.JSONField(blank=True, null=True, default=None)
+    response = ArrayField(models.JSONField())
+    algorithm = models.ForeignKey(ModelSink, on_delete=models.CASCADE)
+    comments = models.CharField(max_length=1000, default=None, blank=True, null=True)
+
+    class Meta:
+        db_table = 'predictions_history'
+        ordering = ['-updated_at']
+        indexes = [
+            models.Index(fields=['created_at', 'algorithm']),
+        ]

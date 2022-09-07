@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from ml_api.predictor.views import RegisterModelApiView
+from ml_api.predictor.views import RegisterModelApiView, PredictionsHistoryApiView
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -9,6 +9,7 @@ else:
     router = SimpleRouter()
 
 router.register("ml/model/register", RegisterModelApiView)
+router.register("ml/model/prediction/history", PredictionsHistoryApiView)
 
 
 app_name = "api"

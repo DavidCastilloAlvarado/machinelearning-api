@@ -4,8 +4,9 @@ from rest_framework import serializers, status, generics
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
-from predictor.models import ModelSink
+from predictor.models import ModelSink, PredictionsHistory
 from predictor.serializer import RegisterModelSerializer, RegisterModelSerializerRequest
+from predictor.serializer import PredictionsHistorySerializer, PredictionsHistorySerializerRequest
 from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -13,7 +14,7 @@ from rest_framework.decorators import action
 from django.db.utils import IntegrityError
 
 
-class ModelsResultsPagination(PageNumberPagination):
+class ModelsPagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 5
@@ -32,7 +33,7 @@ class ModelsResultsPagination(PageNumberPagination):
         })
 
 
-@extend_schema_view(list=extend_schema(parameters=[RegisterModelSerializerRequest],
+@extend_schema_view(list=extend_schema(parameters=[PredictionsHistorySerializerRequest],
                                        description="""List all your model in the database"""),
                     create=extend_schema(
                         description="""Create a new models, ensure that your url will be under server IAM control """),
@@ -51,7 +52,7 @@ class RegisterModelApiView(ViewSet,
                            generics.DestroyAPIView,
                            generics.ListAPIView,
                            ):
-    pagination_class = ModelsResultsPagination
+    pagination_class = ModelsPagination
     modelset = ModelSink
     permission_classes = [AllowAny]
     queryset = modelset.objects.all()
@@ -63,6 +64,45 @@ class RegisterModelApiView(ViewSet,
     search_fields = ['name', 'algorithm']
     ordering_fields = ['version', '-version']
     ordering = ['-version']
+
+    def perform_create(self, serializer):
+        try:
+            serializer.save()
+        except IntegrityError as e:
+            raise serializers.ValidationError(e)
+
+
+@extend_schema_view(list=extend_schema(parameters=[PredictionsHistorySerializerRequest],
+                                       description="""List the history of a model o model base on filters
+                                       
+                                                        - algorithm name
+                                                        
+                                                        - version
+                                                        
+                                                        - order by creation date"""),
+                    create=extend_schema(
+                        description="""Create a records inside the history model, but this only instructional, the history will be created internaly """),
+                    retrieve=extend_schema(
+                        description="""Retrieve an individual record"""),
+                    )
+@extend_schema(tags=['Predictions History'],)
+class PredictionsHistoryApiView(ViewSet,
+                                generics.CreateAPIView,
+                                generics.RetrieveAPIView,
+                                generics.ListAPIView,
+                                ):
+    pagination_class = ModelsPagination
+    modelset = PredictionsHistory
+    permission_classes = [AllowAny]
+    queryset = modelset.objects.all()
+    serializer_class = PredictionsHistorySerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_backends += [filters.OrderingFilter]
+    filter_backends += [filters.SearchFilter]
+    filterset_fields = ['algorithm__version', 'algorithm__algorithm']
+    search_fields = ['algorithm__name', 'algorithm__algorithm']
+    ordering_fields = ['created_at', '-created_at']
+    ordering = ['-created_at', ]
 
     def perform_create(self, serializer):
         try:
