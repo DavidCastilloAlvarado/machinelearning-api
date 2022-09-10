@@ -6,7 +6,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from predictor.models import ModelSink, PredictionsHistory
 from predictor.serializer import RegisterModelSerializer, RegisterModelSerializerRequest
-from predictor.serializer import PredictionsHistorySerializer, PredictionsHistorySerializerRequest
+from predictor.serializer import PredictionsHistorySerializer, PredictionsHistorySerializerRequest, PerformPredictionSerializer, PerformPredictionIdModelSerializer
 from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -109,3 +109,23 @@ class PredictionsHistoryApiView(ViewSet,
             serializer.save()
         except IntegrityError as e:
             raise serializers.ValidationError(e)
+
+
+@extend_schema_view(predict=extend_schema(parameters=[PerformPredictionIdModelSerializer],
+                                          description="""To perform prediction using the selected model in the parameter <b>id</b> which is the id model. """,
+                                          responses={"200": PerformPredictionSerializer, },
+                                          request=PerformPredictionSerializer,
+                                          ),
+
+                    )
+@extend_schema(tags=['Predictor'],)
+class PerformPredictionApiView(GenericViewSet, ):
+    modelset = PredictionsHistory
+    permission_classes = [AllowAny]
+    queryset = modelset.objects.all()
+    serializer_class = PerformPredictionSerializer
+    allowed_methods = ['POST']
+
+    @action(detail=False, methods=['POST'])
+    def predict(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)

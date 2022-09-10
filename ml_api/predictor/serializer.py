@@ -22,3 +22,13 @@ class PredictionsHistorySerializerRequest(serializers.Serializer):
 
 class RegisterModelSerializerRequest(serializers.Serializer):
     ordering = serializers.ChoiceField(["version", "-version"], required=False)
+
+
+class PerformPredictionSerializer(serializers.Serializer):
+    data = serializers.ListField(child=serializers.JSONField())
+
+
+class PerformPredictionIdModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModelSink
+        fields = 'id',
