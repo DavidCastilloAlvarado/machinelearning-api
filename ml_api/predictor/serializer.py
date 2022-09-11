@@ -28,7 +28,16 @@ class PerformPredictionSerializer(serializers.Serializer):
     data = serializers.ListField(child=serializers.JSONField())
 
 
-class PerformPredictionIdModelSerializer(serializers.ModelSerializer):
+class PerformPredictionIdModelSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
     class Meta:
         model = ModelSink
-        fields = 'id',
+
+    def validate(self, attrs):
+        if not self.Meta.model.objects.filter(id=attrs['id']).exists():
+            raise serializers.ValidationError("model id doesn\'t exists")
+        model = self.Meta.model.objects.get(id=attrs['id'])
+        model = RegisterModelSerializer(model)
+        attrs['id'] = model.data
+        return attrs

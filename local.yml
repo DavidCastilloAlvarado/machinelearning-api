@@ -6,6 +6,11 @@ volumes:
 
 services:
   django:
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 3G
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile

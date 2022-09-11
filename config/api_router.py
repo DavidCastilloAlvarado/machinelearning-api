@@ -8,9 +8,9 @@ if settings.DEBUG:
 else:
     router = SimpleRouter()
 
-# router.register("ml/model/register", RegisterModelApiView)
-# router.register("ml/model/prediction/history", PredictionsHistoryApiView)
-router.register('ml/model/prediction2', PerformPredictionApiView, basename='prediction')
+router.register("ml/model/register", RegisterModelApiView)
+router.register("ml/model/prediction/history", PredictionsHistoryApiView)
+router.register('ml/model/prediction', PerformPredictionApiView, basename='prediction')
 
 
 app_name = "api"

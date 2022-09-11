@@ -120,12 +120,15 @@ class PredictionsHistoryApiView(ViewSet,
                     )
 @extend_schema(tags=['Predictor'],)
 class PerformPredictionApiView(GenericViewSet, ):
-    modelset = PredictionsHistory
     permission_classes = [AllowAny]
-    queryset = modelset.objects.all()
     serializer_class = PerformPredictionSerializer
     allowed_methods = ['POST']
 
     @action(detail=False, methods=['POST'])
     def predict(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_200_OK)
+        params = PerformPredictionIdModelSerializer(data=request.GET)
+        params.is_valid(raise_exception=True)
+        data = self.serializer_class(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        return Response(params.validated_data, status=status.HTTP_200_OK)
