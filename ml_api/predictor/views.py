@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from predictor.models import ModelSink, PredictionsHistory
 from predictor.serializer import RegisterModelSerializer, RegisterModelSerializerRequest
 from predictor.serializer import PredictionsHistorySerializer, PredictionsHistorySerializerRequest, PerformPredictionHeartFailureSerializer, PerformPredictionIdModelSerializer, PerformPredictionOutputSerializer
-from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
+from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer, OpenApiExample, OpenApiResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.decorators import action
@@ -52,7 +52,7 @@ class ModelsPagination(PageNumberPagination):
                     destroy=extend_schema(
                         description="""Destroy a machine learning model from the database using his <b>id</b>"""),
                     )
-@extend_schema(tags=['Register a model'],)
+@extend_schema(tags=['Model Registration'],)
 class RegisterModelApiView(ViewSet,
                            generics.CreateAPIView,
                            generics.RetrieveAPIView,
@@ -62,7 +62,7 @@ class RegisterModelApiView(ViewSet,
                            ):
     pagination_class = ModelsPagination
     modelset = ModelSink
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = modelset.objects.all()
     serializer_class = RegisterModelSerializer
     filter_backends = [DjangoFilterBackend]
@@ -72,6 +72,7 @@ class RegisterModelApiView(ViewSet,
     search_fields = ['name', 'algorithm']
     ordering_fields = ['version', '-version']
     ordering = ['-version']
+    throttle_scope = "registration"
 
     def perform_create(self, serializer):
         try:
@@ -95,7 +96,7 @@ class RegisterModelApiView(ViewSet,
                     )
 @extend_schema(tags=['Predictions History'],)
 class PredictionsHistoryApiView(ViewSet,
-                                generics.CreateAPIView,
+                                # generics.CreateAPIView,
                                 generics.RetrieveAPIView,
                                 generics.ListAPIView,
                                 ):
@@ -111,6 +112,7 @@ class PredictionsHistoryApiView(ViewSet,
     search_fields = ['algorithm__name', 'algorithm__algorithm']
     ordering_fields = ['created_at', '-created_at']
     ordering = ['-created_at', ]
+    throttle_scope = 'history'
 
     def perform_create(self, serializer):
         try:
@@ -120,17 +122,49 @@ class PredictionsHistoryApiView(ViewSet,
 
 
 @extend_schema_view(predict=extend_schema(parameters=[PerformPredictionIdModelSerializer],
-                                          description="""To perform prediction using the selected model in the parameter <b>id</b> which is the id model. """,
-                                          responses={"200": PerformPredictionOutputSerializer, },
+                                          description="""To perform prediction using the selected model in the parameter <b>id</b> which is the id model. <br>
+                                          - You can send one or multiples records at the same time, usign the flag many true/false <br>
+                                          - If you are in many true mode, then your input must be a list of jsons records.""",
+                                          responses={"200": PerformPredictionOutputSerializer, "429":
+                                                     OpenApiResponse(description="Request was throttled. Expected available in 2 second.")},
                                           request=PerformPredictionHeartFailureSerializer,
+                                          examples=[OpenApiExample(
+                                              "Heart failure example 1",
+                                              summary="example from the challenge doc",
+                                              description="send a single record and then recive a fload number (probability) of the heart failure in that patient",
+                                              value={
+                                                    "age": 41,
+                                                    "sex": "M",
+                                                    "chestPainType": "ATA",
+                                                    "restingBP": 140,
+                                                    "cholesterol": 289,
+                                                    "fastingBS": 0,
+                                                    "restingECG": "Normal",
+                                                    "maxHR": 123,
+                                                    "exerciseAngina": "N",
+                                                    "oldpeak": 1.5,
+                                                    "sTSlope": "Flat"
+                                                    },
+                                              request_only=True,
+                                              response_only=False
+                                          ), OpenApiExample(
+                                              "Heart failure example 1",
+                                              summary="example from the challenge doc",
+                                              value={
+                                                  "prob": 0.8996033992826433
+                                              },
+                                              request_only=False,
+                                              response_only=True
+                                          )]
                                           ),
 
                     )
 @extend_schema(tags=['Predictor'],)
 class PerformPredictionApiView(GenericViewSet, ):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = PerformPredictionHeartFailureSerializer
     allowed_methods = ['POST']
+    throttle_scope = 'perform'
 
     def __load_files_data(self, file_name, serializer, record_field):
         _loaded = cache.get(file_name)
@@ -163,7 +197,6 @@ class PerformPredictionApiView(GenericViewSet, ):
             comments="",  # string
 
         )
-        print(record)
         PredictionsHistory.objects.create(**record)
 
     @action(detail=False, methods=['POST'])
@@ -184,15 +217,15 @@ class PerformPredictionApiView(GenericViewSet, ):
 
         # Prepare input
         if many:
-            x_input = pd.DataFrame.from_records(data.validated_data)
+            x_input = pd.DataFrame.from_records(data.data)
         else:
-            x_input = pd.DataFrame.from_records([data.validated_data])
+            x_input = pd.DataFrame.from_records([data.data])
 
         # Perform prediction
         try:
             output = pipe.predict_proba(x_input)[:, 1]
         except Exception as e:
-            return Response({"error": e, "model_description": model_reg['id']['description']}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": str(e), "model_description": model_reg['id']['description']}, status=status.HTTP_400_BAD_REQUEST)
 
         # Prepare output
         if not many:

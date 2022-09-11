@@ -30,17 +30,34 @@ class PerformPredictionOutputSerializer(serializers.Serializer):
 
 class PerformPredictionHeartFailureSerializer(serializers.Serializer):
     # data = serializers.JSONField()
-    Age = serializers.IntegerField()
-    Sex = serializers.CharField()
-    ChestPainType = serializers.CharField()
-    RestingBP = serializers.FloatField()
-    Cholesterol = serializers.FloatField()
-    FastingBS = serializers.FloatField()
-    RestingECG = serializers.CharField()
-    MaxHR = serializers.FloatField()
-    ExerciseAngina = serializers.CharField()
-    Oldpeak = serializers.FloatField()
-    ST_Slope = serializers.CharField()
+    age = serializers.IntegerField()
+    sex = serializers.CharField()
+    chestPainType = serializers.CharField()
+    restingBP = serializers.FloatField()
+    cholesterol = serializers.FloatField()
+    fastingBS = serializers.FloatField()
+    restingECG = serializers.CharField()
+    maxHR = serializers.FloatField()
+    exerciseAngina = serializers.CharField()
+    oldpeak = serializers.FloatField()
+    sTSlope = serializers.CharField()
+
+    def to_representation(self, instance):
+        attrs = super().to_representation(instance)
+
+        attrs_m = {}
+        attrs_m['Age'] = attrs['age']
+        attrs_m['Sex'] = attrs['sex']
+        attrs_m['ChestPainType'] = attrs['chestPainType']
+        attrs_m['RestingBP'] = attrs['restingBP']
+        attrs_m['Cholesterol'] = attrs['cholesterol']
+        attrs_m['FastingBS'] = attrs['fastingBS']
+        attrs_m['RestingECG'] = attrs['restingECG']
+        attrs_m['MaxHR'] = attrs['maxHR']
+        attrs_m['ExerciseAngina'] = attrs['exerciseAngina']
+        attrs_m['Oldpeak'] = attrs['oldpeak']
+        attrs_m['ST_Slope'] = attrs['sTSlope']
+        return attrs_m
 
 
 class PerformPredictionIdModelSerializer(serializers.Serializer):
