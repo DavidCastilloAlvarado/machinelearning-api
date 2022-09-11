@@ -24,12 +24,28 @@ class RegisterModelSerializerRequest(serializers.Serializer):
     ordering = serializers.ChoiceField(["version", "-version"], required=False)
 
 
-class PerformPredictionSerializer(serializers.Serializer):
-    data = serializers.ListField(child=serializers.JSONField())
+class PerformPredictionOutputSerializer(serializers.Serializer):
+    prob = serializers.FloatField()
+
+
+class PerformPredictionHeartFailureSerializer(serializers.Serializer):
+    # data = serializers.JSONField()
+    Age = serializers.IntegerField()
+    Sex = serializers.CharField()
+    ChestPainType = serializers.CharField()
+    RestingBP = serializers.FloatField()
+    Cholesterol = serializers.FloatField()
+    FastingBS = serializers.FloatField()
+    RestingECG = serializers.CharField()
+    MaxHR = serializers.FloatField()
+    ExerciseAngina = serializers.CharField()
+    Oldpeak = serializers.FloatField()
+    ST_Slope = serializers.CharField()
 
 
 class PerformPredictionIdModelSerializer(serializers.Serializer):
     id = serializers.IntegerField()
+    many = serializers.BooleanField(default=False)
 
     class Meta:
         model = ModelSink

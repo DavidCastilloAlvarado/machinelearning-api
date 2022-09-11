@@ -10,7 +10,7 @@ else:
 
 router.register("ml/model/register", RegisterModelApiView)
 router.register("ml/model/prediction/history", PredictionsHistoryApiView)
-router.register('ml/model/prediction', PerformPredictionApiView, basename='prediction')
+router.register('ml/model/heart-failure/prediction', PerformPredictionApiView, basename='prediction')
 
 
 app_name = "api"

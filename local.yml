@@ -9,8 +9,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4.0'
-          memory: 3G
+          cpus: '1.0'
+          memory: 1G
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
