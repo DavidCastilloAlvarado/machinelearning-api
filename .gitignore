@@ -279,3 +279,9 @@ ml_api/media/
 
 ### GCP
 cloud_sql_proxy
+
+# no json keys
+**.json
+
+# model files
+**.joblib
