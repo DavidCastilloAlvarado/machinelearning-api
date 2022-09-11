@@ -30,17 +30,21 @@ class PerformPredictionOutputSerializer(serializers.Serializer):
 
 class PerformPredictionHeartFailureSerializer(serializers.Serializer):
     # data = serializers.JSONField()
-    age = serializers.IntegerField()
-    sex = serializers.CharField()
-    chestPainType = serializers.CharField()
-    restingBP = serializers.FloatField()
-    cholesterol = serializers.FloatField()
-    fastingBS = serializers.FloatField()
-    restingECG = serializers.CharField()
-    maxHR = serializers.FloatField()
-    exerciseAngina = serializers.CharField()
-    oldpeak = serializers.FloatField()
-    sTSlope = serializers.CharField()
+    age = serializers.IntegerField(help_text="age of the patient [years]")
+    sex = serializers.CharField(help_text="sex of the patient [M: Male, F: Female]")
+    chestPainType = serializers.CharField(help_text="""chest pain type [TA: Typical Angina, ATA: Atypical Angina, 
+                                          NAP: Non-Anginal Pain, ASY: Asymptomatic]""")
+    restingBP = serializers.FloatField(help_text="resting blood pressure [mm Hg]")
+    cholesterol = serializers.FloatField(help_text="serum cholesterol [mm/dl]")
+    fastingBS = serializers.FloatField(help_text="fasting blood sugar [1: if FastingBS > 120 mg/dl, 0: otherwise]")
+    restingECG = serializers.CharField(help_text="""resting electrocardiogram results [Normal: Normal, ST: having ST-T wave
+                                                    abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), LVH:
+                                                    showing probable or definite left ventricular hypertrophy by Estes' criteria]""")
+    maxHR = serializers.FloatField(help_text="maximum heart rate achieved [Numeric value between 60 and 202]")
+    exerciseAngina = serializers.CharField(help_text="exercise-induced angina [Y: Yes, N: No]")
+    oldpeak = serializers.FloatField(help_text="ST [Numeric value measured in depression]")
+    sTSlope = serializers.CharField(help_text="""the slope of the peak exercise ST segment [Up: upsloping, Flat: 
+                                    flat, Down:downsloping]""")
 
     def to_representation(self, instance):
         attrs = super().to_representation(instance)
