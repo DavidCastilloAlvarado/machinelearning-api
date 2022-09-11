@@ -22,7 +22,7 @@ drf-spectacular==0.23.1  # https://github.com/tfranzel/drf-spectacular
 # DRF-filters
 django-filter==22.1 # https://pypi.org/project/django-filter/
 
-# Machine learning 
+# Machine learning
 # -------------------------------------------------------------------------
 scikit-learn==0.23.2 # https://scikit-learn.org/stable/install.html#install-official-release
 lightgbm==3.2.1  # https://lightgbm.readthedocs.io/en/latest/Python-Intro.html
