@@ -317,8 +317,12 @@ SPECTACULAR_SETTINGS = {
     "SERVERS": [
         {"url": "http://127.0.0.1:8000", "description": "Local Development server"},
         {
-            "url": "https://ml.davidcastilloalavarado.com",
+            "url": "https://ml-api-server-ky2k7gxwga-uc.a.run.app",
             "description": "Production server.",
+        },
+        {
+            "url": "https://ml.davidcastilloalvarado.com",
+            "description": "Production server 2",
         },
     ],
 }
