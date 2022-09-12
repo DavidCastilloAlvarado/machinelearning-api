@@ -117,7 +117,7 @@ See detailed [cookiecutter-django Docker documentation](http://cookiecutter-djan
 
 # Usage
 
-1. The project has its own api schema with extence documention. 
+1. The project has its own api schema with extence documention.
 
 ```
 http://127.0.0.1:8000/api/docs/
@@ -162,12 +162,12 @@ ID_PROJECT="your-id-gcp-project"
    ```
    GET
    http://127.0.0.1:8000/api/ml/model/register/?ordering=-created_at
-   ``` 
+   ```
    3.2. After you obtain the model id you can use the id to call the predictor, you can perform a single but also multi records at the same time.
    ```
    POST
    data as json
    http://127.0.0.1:8000/api/ml/model/heart-failure/predict/?id=10&many=false
-   ``` 
+   ```
 
    <img src="doc/images/prediction.png" alt="drawing" width="500"/>
