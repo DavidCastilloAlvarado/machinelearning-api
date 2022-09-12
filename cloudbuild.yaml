@@ -14,7 +14,9 @@ steps:
         "-i",
         "gcr.io/${PROJECT_ID}/${_GCRUN_INSTANCE}",
         "-s",
-        "${PROJECT_ID}:${_REGION}:${_POSTG_INSTANCE}",
+        "${PROJECT_ID}:${_DB_ZONE}:${_DB_INSTANCE}",
+        "-e",
+        "DJANGO_SECRET_FILE=${_ENV_SECRETS}",
         "--",
         "python",
         "manage.py",
@@ -24,11 +26,14 @@ steps:
 
   # push static files to Cloud Bucket
   - name: "gcr.io/google-appengine/exec-wrapper"
-    args: [
+    args:
+      [
         "-i",
         "gcr.io/${PROJECT_ID}/${_GCRUN_INSTANCE}",
-        # "-s",
-        # "${PROJECT_ID}:${_REGION}:${_POSTG_INSTANCE}",
+        "-s",
+        "${PROJECT_ID}:${_DB_ZONE}:${_DB_INSTANCE}",
+        "-e",
+        "DJANGO_SECRET_FILE=${_ENV_SECRETS}",
         "--",
         "python",
         "manage.py",
@@ -44,7 +49,8 @@ steps:
   # Stable
   # https://cloud.google.com/sdk/gcloud/reference/run/deploy
   - name: "gcr.io/cloud-builders/gcloud"
-    args: [
+    args:
+      [
         "beta",
         "run",
         "deploy",
@@ -64,14 +70,13 @@ steps:
         "--concurrency",
         "10",
         "--allow-unauthenticated",
-        # "--add-cloudsql-instances",
-        # "${PROJECT_ID}:${_REGION}:${_POSTG_INSTANCE}",
+        "--add-cloudsql-instances",
+        "${PROJECT_ID}:${_DB_ZONE}:${_DB_INSTANCE}",
         "--set-env-vars",
-        "DJANGO_SETTINGS_MODULE=config.settings.production,DJANGO_READ_DOT_ENV_FILE=True",
+        "DJANGO_SETTINGS_MODULE=config.settings.production,DJANGO_SECRET_FILE=${_ENV_SECRETS}",
         "--vpc-connector",
         "mlapiconnectorvpc",
-        "--set-secrets",
-        "/usr/src/app/secrets/.env=${_env_settings}:latest",
       ]
-
-timeout: 300s
+timeout: 3000s
+options:
+   machineType: 'N1_HIGHCPU_32'

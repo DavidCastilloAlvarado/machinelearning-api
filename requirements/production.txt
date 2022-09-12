@@ -4,10 +4,13 @@
 
 gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
 psycopg2==2.9.3  # https://github.com/psycopg/psycopg2
-Collectfast==2.2.0  # https://github.com/antonagestam/collectfast
+# Collectfast==2.2.0  # https://github.com/antonagestam/collectfast
 sentry-sdk==1.9.7  # https://github.com/getsentry/sentry-python
 
 # Django
 # ------------------------------------------------------------------------------
+google-cloud-error-reporting==1.1.2
 django-storages[google]==1.13.1  # https://github.com/jschneier/django-storages
+google-cloud-logging==2.3.1
+google-cloud-secret-manager==2.1.0
 # django-anymail==8.6  # https://github.com/anymail/django-anymail

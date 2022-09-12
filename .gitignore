@@ -276,3 +276,12 @@ ml_api/media/
 .env
 .envs/*
 !.envs/.local/
+
+### GCP
+cloud_sql_proxy
+
+# no json keys
+**.json
+
+# model files
+/**.joblib

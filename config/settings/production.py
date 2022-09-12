@@ -13,7 +13,9 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["ml.davidcastilloalavarado.com"])
+ALLOWED_HOSTS = env.list(
+    "DJANGO_ALLOWED_HOSTS", default=["ml.davidcastilloalvarado.com"]
+)
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -70,7 +72,7 @@ GS_DEFAULT_ACL = "publicRead"
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "ml_api.utils.storages.StaticRootGoogleCloudStorage"
-COLLECTFAST_STRATEGY = "collectfast.strategies.gcloud.GoogleCloudStrategy"
+# COLLECTFAST_STRATEGY = "collectfast.strategies.gcloud.GoogleCloudStrategy"
 STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
 # MEDIA
 # ------------------------------------------------------------------------------
@@ -110,7 +112,7 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # Collectfast
 # ------------------------------------------------------------------------------
 # https://github.com/antonagestam/collectfast#installation
-INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
+# INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
 
 # LOGGING
 # ------------------------------------------------------------------------------
