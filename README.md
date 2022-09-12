@@ -124,7 +124,7 @@ http://127.0.0.1:8000/api/docs/
 ```
 <img src="doc/images/api_docs.png" alt="drawing" width="500"/>
 
-2. Select the right server in this dropdown field. If you ar working in develop then use the 127.0.0.1 but if you are in production use the right one. 
+2. Select the right server in this dropdown field. If you ar working in develop then use the 127.0.0.1 but if you are in production use the right one.
 
 <img src="doc/images/server.png" alt="drawing" width="500"/>
 
