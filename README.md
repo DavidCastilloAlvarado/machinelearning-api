@@ -152,7 +152,7 @@ You can create/update/list/retrieve the models that you want.
 
 # Kaggle Notebook
 
-Please go to this link in kaggle and run all the notebook. [Notebook-link](https://fdsfs.com)
+Please go to this link in kaggle and run all the notebook. [Notebook-link](https://www.kaggle.com/code/scarecrow2020/beginner-friendly-catboost-with-optuna)
 
 1. (Add-ons) create a secret in the notebook
 
