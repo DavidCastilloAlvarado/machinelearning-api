@@ -58,7 +58,9 @@ class ModelsPagination(PageNumberPagination):
         description="""List all your model in the database""",
     ),
     create=extend_schema(
-        description="""Create a new models, ensure that your url will be under server IAM control """
+        description="""
+        Create new models, and ensure that your blob URLs 
+        will be available to the server IAM control."""
     ),
     retrieve=extend_schema(
         description="""Call an specific model using the unique <b>id</b> in the database"""
