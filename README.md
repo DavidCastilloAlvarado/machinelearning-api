@@ -124,6 +124,13 @@ http://127.0.0.1:8000/api/docs/
 ```
 <img src="doc/images/api_docs.png" alt="drawing" width="500"/>
 
+2. Select the right server in this dropdown field. If you ar working in develop then use the 127.0.0.1 but if you are in production use the right one.
+
+<img src="doc/images/server.png" alt="drawing" width="500"/>
+
+3. Put your user-token in the authorization handler. Or create your own using the api `/auth-token/`
+<img src="doc/images/authorizations.png" alt="drawing" width="500"/>
+
 ### 1. `Predictor` (more information about schemas in the webpage schema):
 To perform prediction using the selected model in the parameter id which is the id model.
 - You can send one or multiples records at the same time, usign the flag many true/false
