@@ -284,4 +284,4 @@ cloud_sql_proxy
 **.json
 
 # model files
-**.joblib
+/**.joblib

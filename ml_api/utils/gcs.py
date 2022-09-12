@@ -4,8 +4,6 @@ from datetime import datetime
 
 from google.cloud import storage
 
-storage_client = storage.Client()
-
 
 def create_name(source, folder):
     assert any([val in folder for val in ("models", "encoders")])
@@ -16,14 +14,9 @@ def create_name(source, folder):
     return destination_blob_name
 
 
-def create_bucket(dataset_name):
-    """Creates a new bucket. https://cloud.google.com/storage/docs/"""
-    bucket = storage_client.create_bucket(dataset_name)
-    print(f"Bucket {bucket.name} created")
-
-
 def upload_blob(bucket_name, source_file_name, folder):
     """Uploads a file to the bucket. https://cloud.google.com/storage/docs/"""
+    storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
     destination_blob_name = create_name(source_file_name, folder)
     blob = bucket.blob(destination_blob_name)
@@ -32,14 +25,8 @@ def upload_blob(bucket_name, source_file_name, folder):
     return f"https://storage.cloud.google.com/{bucket_name}/{destination_blob_name}"
 
 
-def list_blobs(bucket_name):
-    """Lists all the blobs in the bucket. https://cloud.google.com/storage/docs/"""
-    blobs = storage_client.list_blobs(bucket_name)
-    for blob in blobs:
-        print(blob.name)
-
-
 def download_to_file(blob_url, file_destination):
+    storage_client = storage.Client()
     """Takes the data from your GCS Bucket and puts it into the working directory"""
     assert "storage.cloud.google.com/" in blob_url, "Url file is not an storage object"
     convert_to_gs_url = blob_url.replace("https", "gs").replace(
