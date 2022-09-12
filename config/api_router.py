@@ -15,7 +15,7 @@ else:
 router.register("ml/model/register", RegisterModelApiView)
 router.register("ml/model/prediction/history", PredictionsHistoryApiView)
 router.register(
-    "ml/model/heart-failure/prediction", PerformPredictionApiView, basename="prediction"
+    "ml/model/heart-failure", PerformPredictionApiView, basename="prediction"
 )
 
 

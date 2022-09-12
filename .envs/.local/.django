@@ -2,4 +2,4 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER = yes
 IPYTHONDIR = /app/.ipython
-GOOGLE_APPLICATION_CREDENTIALS = ./gcp-sa.json
+# GOOGLE_APPLICATION_CREDENTIALS = ./gcp-sa.json
