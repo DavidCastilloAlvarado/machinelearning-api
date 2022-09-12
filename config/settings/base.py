@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+import io
 from pathlib import Path
 
 import environ
@@ -11,9 +12,16 @@ APPS_DIR = ROOT_DIR / "ml_api"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
+DJANGO_SECRET_FILE = env("DJANGO_SECRET_FILE", default=None)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
     env.read_env(str(ROOT_DIR / "secrets" / ".env"))
+elif DJANGO_SECRET_FILE:
+    from ml_api.utils.secretmanager import get_payload_secret
+
+    env = environ.Env()
+    payload = get_payload_secret(DJANGO_SECRET_FILE)
+    env.read_env(io.StringIO(payload))
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -64,6 +72,7 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
+    "django_filters",
 ]
 THIRD_PARTY_APPS = [
     # "crispy_forms",
@@ -79,6 +88,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "ml_api.users",
+    "ml_api.predictor",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -283,6 +293,15 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "ml_api.utils.throttling.ScopedRateThrottleSkillMapper",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "registration": "10/day",
+        "perform": "2/sec",
+        "history": "10/day",
+    },
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -297,7 +316,14 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
     "SERVERS": [
         {"url": "http://127.0.0.1:8000", "description": "Local Development server"},
-        {"url": "https://ml.davidcastilloalavarado.com", "description": "Production server"},
+        {
+            "url": "https://ml-api-server-ky2k7gxwga-uc.a.run.app",
+            "description": "Production server.",
+        },
+        {
+            "url": "https://ml.davidcastilloalvarado.com",
+            "description": "Production server 2",
+        },
     ],
 }
 # Your stuff...

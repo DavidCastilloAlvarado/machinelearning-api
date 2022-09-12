@@ -1,8 +1,9 @@
 import os
-from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
+
+# from collections.abc import Sequence
 
 ROOT_DIR_PATH = Path(__file__).parent.resolve()
 PRODUCTION_DOTENVS_DIR_PATH = ROOT_DIR_PATH / ".envs" / ".production"
@@ -13,9 +14,7 @@ PRODUCTION_DOTENV_FILE_PATHS = [
 DOTENV_FILE_PATH = ROOT_DIR_PATH / ".env"
 
 
-def merge(
-    output_file_path, merged_file_paths, append_linesep: bool = True
-) -> None:
+def merge(output_file_path, merged_file_paths, append_linesep: bool = True) -> None:
     with open(output_file_path, "w") as output_file:
         for merged_file_path in merged_file_paths:
             with open(merged_file_path) as merged_file:
