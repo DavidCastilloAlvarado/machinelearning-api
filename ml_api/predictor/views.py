@@ -58,7 +58,76 @@ class ModelsPagination(PageNumberPagination):
         description="""List all your model in the database""",
     ),
     create=extend_schema(
-        description="""Create a new models, ensure that your url will be under server IAM control """
+        description="""
+        Create new models, and ensure that your blob URLs
+        will be available to the server IAM control.""",
+        examples=[
+            OpenApiExample(
+                "Register a model",
+                summary="how to create a model",
+                description="""send a record with all the important
+                data to run the lgbmc model. <b> be carefull to not duplicate keys</b>""",
+                value={
+                    "name": "LightGBM classifier",
+                    "description": "Test model as a probe of concept of machine learning ops module",
+                    "algorithm": "lgbmc",
+                    "status": "dev",
+                    "version": "0.2.0",
+                    "url": "https://storage.cloud.google.com/ml-api-storage/models/lgbmc/12-09-22/ed2c7a9792022daba04945f4f04d947c.joblib",
+                    "url_encoder": "https://storage.cloud.google.com/ml-api-storage/models/lgbmc/12-09-22/7795578ab99af1740962ed57ee6b43b9.joblib",
+                    "sample_input": {
+                        "Age": 56,
+                        "Sex": "M",
+                        "ChestPainType": "ASY",
+                        "RestingBP": 130,
+                        "Cholesterol": 0,
+                        "FastingBS": 0,
+                        "RestingECG": "Normal",
+                        "MaxHR": 120,
+                        "ExerciseAngina": "N",
+                        "Oldpeak": 0.0,
+                        "ST_Slope": "Flat",
+                    },
+                    "sample_output": {"output": 0.9612178468946518},
+                    "metrics": [{"accuracy_score": 0.8732}],
+                },
+                request_only=True,
+                response_only=False,
+            ),
+            OpenApiExample(
+                "Register a model",
+                summary="how to create a model",
+                value={
+                    "id": 9,
+                    "created_at": "2022-09-12T01:48:52.940657Z",
+                    "updated_at": "2022-09-12T01:48:52.940686Z",
+                    "name": "LightGBM classifier",
+                    "description": "Test model as a probe of concept of machine learning ops module",
+                    "algorithm": "lgbmc",
+                    "status": "dev",
+                    "version": "0.2.0",
+                    "url": "https://storage.cloud.google.com/ml-api-storage/models/lgbmc/12-09-22/ed2c7a9792022daba04945f4f04d947c.joblib",
+                    "url_encoder": "https://storage.cloud.google.com/ml-api-storage/models/lgbmc/12-09-22/7795578ab99af1740962ed57ee6b43b9.joblib",
+                    "sample_input": {
+                        "Age": 56,
+                        "Sex": "M",
+                        "ChestPainType": "ASY",
+                        "RestingBP": 130,
+                        "Cholesterol": 0,
+                        "FastingBS": 0,
+                        "RestingECG": "Normal",
+                        "MaxHR": 120,
+                        "ExerciseAngina": "N",
+                        "Oldpeak": 0.0,
+                        "ST_Slope": "Flat",
+                    },
+                    "sample_output": {"output": 0.9612178468946518},
+                    "metrics": [{"accuracy_score": 0.8732}],
+                },
+                request_only=False,
+                response_only=True,
+            ),
+        ],
     ),
     retrieve=extend_schema(
         description="""Call an specific model using the unique <b>id</b> in the database"""
