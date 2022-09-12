@@ -5,6 +5,15 @@ from datetime import datetime
 from google.cloud import storage
 
 
+def create_name(source, folder):
+    assert any([val in folder for val in ("models", "encoders")])
+    date = datetime.now().strftime("%d-%m-%y")
+    ext = source.split(".")[-1]
+    name = hashlib.md5(str(datetime.now()).encode("ascii")).hexdigest()
+    destination_blob_name = f"{folder}/{date}/{name}.{ext}"
+    return destination_blob_name
+
+
 def upload_blob(bucket_name, source_file_name, folder):
     """Uploads a file to the bucket. https://cloud.google.com/storage/docs/"""
     storage_client = storage.Client()
